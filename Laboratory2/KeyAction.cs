@@ -12,52 +12,49 @@ namespace Laboratory2
 
 		public KeyAction()
 		{
-			this.position = 1;
+			this.position = 0;
 		}
-		public void UsedKey()
+
+		public int getColNum()
 		{
-			cki = Console.ReadKey();
-			if (cki.Key.ToString() == "LeftArrow")
-			{
-				if (this.position > 1)
-				{
-					this.position -= 1;
-				}
-			}
-			if (cki.Key.ToString() == "RightArrow")
-			{
-				if (this.position < Connect4State.gridColumns)
-				{
-					this.position += 1;
-				}
-			}
-			if (cki.Key.ToString() == "Enter")
-			{
-				if (Connect4State.table[0,(this.position-1)]=='0') {
-					int flaga= Connect4State.gridRows;
-					bool end = false;
-					do
-					{
-						flaga--;
-						if (Connect4State.table[flaga, (this.position - 1)] == '0')
-						{
-							Connect4State.table[flaga, (this.position - 1)] = 'X';
-							end = true;
-						}
-					} while (Connect4State.table[flaga, (this.position - 1)] != '0' && end==false);
-					
-				}
-			}
+            while (true)
+            {
+                string spacesString = new string(' ', position * 2 + 1);
+
+                StringBuilder pointerString = new StringBuilder();
+                pointerString.Append(spacesString + "^");
+
+                Console.Write("\r");
+                Console.Write(pointerString.ToString());
+
+                cki = Console.ReadKey();
+                if (cki.Key.ToString() == "LeftArrow")
+                {
+                    if (this.position > 0)
+                    {
+                        this.position -= 1;
+                    }
+                    else
+                    {
+                        this.position = Connect4State.GRIDSIZE - 1;
+                    }
+                }
+
+                if (cki.Key.ToString() == "RightArrow")
+                {
+                    this.position = ++this.position % Connect4State.GRIDSIZE;
+                }
+
+                if (cki.Key.ToString() == "Enter")
+                {
+                    break;
+                }
+
+                string cleaner = '\r' + new string(' ', 30);
+                Console.Write(cleaner); // nie pytaj xD
+            }
+            return position;
 		}
-		public void Print()
-		{
-			StringBuilder builder = new StringBuilder();
-			for (int i = 1; i < (this.position * 2); i++)
-			{
-				builder.Append(" ");
-			}
-			builder.Append("X");
-			Console.Write(builder.ToString());
-		}
+        
 	}
 }
