@@ -20,18 +20,32 @@ namespace Laboratory2 {
             int i = 0;
 			while (true)
 			{
-                Console.Write("Punkty: " + startState.ComputeHeuristicGrade() + "\n");
-                Console.Write("KKKK: " + playersMark[i++] + "\n");
-                i = i % 2;
-
-                startState.Print();
-				int choosenColumn = keyAction.getColNum();
-
-
-                startState.insertToken(choosenColumn, playersMark[i]);
-
-
                 Console.Clear();
+                if (i % 2 == 0)
+                {
+                    Console.Write("Punkty: " + startState.ComputeHeuristicGrade() + "\n");
+                    Console.Write("KKKK: " + playersMark[i] + "\n");
+
+                    startState.Print();
+                    int choosenColumn = keyAction.getColNum();
+
+                    startState.insertToken(choosenColumn, playersMark[i]);
+                }
+                else
+                {
+                    Connect4Search search = new Connect4Search(startState, true, 1);
+                    search.DoSearch();
+
+
+                    Console.Write("Length: " + search.MovesMiniMaxes.Count + '\n');
+                    foreach (KeyValuePair<string, double> kvp in search.MovesMiniMaxes)
+                    {
+                        Console.Write(kvp.Key.Length + "<- le ");
+                        Console.Write(kvp.Key + " " + kvp.Value + '\n');
+                    }
+			        Console.ReadKey();
+                }
+                i = (++i) % 2;
 			}
 
 

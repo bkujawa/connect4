@@ -38,14 +38,27 @@ namespace Laboratory2
 
             this.id = IDMaker();
         }
-        public Connect4State(Connect4State parent/*, pozostale niezbedne parametry*/) : base(parent)
+
+        public Connect4State(Connect4State parent, int col, char playerToken) : base(parent)
         {
-            //reszta implementacji
+            this.table = parent.table;
+
+            //Przypisanie odpowiedniej heurystyki, 0 jeśli nie ma miejsca w kolumnie
+            if (this.getEmptyHight(col) > 0)
+            {
+                insertToken(col, playerToken);
+                this.h = ComputeHeuristicGrade();
+            }
+            else
+            {
+                this.h = 0;
+            }
 
             //ustawienie stringa identyfikujacego stan.
-            //this.id; // = ...
+            this.id = IDMaker();
+
             //ustawienie na ktorym poziomie w drzewie znajduje sie stan.
-            this.depth = parent.depth + 0.5;
+            this.depth = parent.depth + 1; // 0.5 (?)
 
             //Bardzo wazne nie ustawiamy na czubek drzewa z ktorego budujemy stan. Tylko na pierwsze pokolenie stanow potomnych
             if (parent.rootMove == null)
@@ -70,7 +83,7 @@ namespace Laboratory2
             // 4 = ~~ -~~ (infinity)
 
             double minPoints = 0, maxPoints = 0;
-            char minChar = 'x', maxChar = 'o';
+            char minChar = 'o', maxChar = 'x';
 
             // Liczenie punktów dla każdej kolumny
             for (int col = 0; col < GRIDSIZE; col++)
@@ -80,16 +93,10 @@ namespace Laboratory2
                     if (Table[row, col] == minChar)
                     {
                         minPoints -= getPoints(minChar, row, col);
-                        if (row + 1 < GRIDSIZE && Table[row + 1, col] == minChar) { }
-                        else
-                            break;
                     }
                     else if (Table[row, col] == maxChar)
                     {
                         maxPoints += getPoints(maxChar, row, col);
-                        if (row + 1 < GRIDSIZE && Table[row + 1, col] == maxChar) { }
-                        else
-                            break;
                     }
                 }
             }
@@ -162,30 +169,52 @@ namespace Laboratory2
             }
             else
             {
-                for (int row = 0; row < GRIDSIZE; row++)
+                for (int row = GRIDSIZE - 1; row >= 0; row--)
                 {
-                    if (Table[row, column] != '0')
-                    {
-                        Table[row - 1, column] = c;
-
-                        Console.Write(row);
-                        break;
-                    }
-                    else if (row + 1 == GRIDSIZE)
+                    //Console.Write("Row:" + row + " col:" + column + " Tble:" + Table[row, column] + "\n");
+                    if (Table[row, column] == '0')
                     {
                         Table[row, column] = c;
+
+                        //Console.Write(row);
                         break;
                     }
                 }
+                //Console.Write("Break \n");
+                //Console.ReadKey();
             }
+        }
+
+        public int getEmptyHight(int colIdx)
+        {
+            int counter = 0;
+            if (colIdx < 0 || colIdx >= GRIDSIZE)
+            {
+                return --counter;
+            }
+            else
+            {
+                for (int i = 0; i < GRIDSIZE; i++)
+                {
+                    if (Table[i, colIdx] == '0')
+                    {
+                        counter++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } 
+            }
+            return counter;
         }
 
         private double getRowPoints(char c, int row, int col)
         {
-            int counter = 0;
+            int counter = 1;
 
-            int i = 0;
-            for (int right = col; right < GRIDSIZE && i++ < 4; right++)
+            int i = 1;
+            for (int right = col + 1; right < GRIDSIZE && i++ < 4; right++)
             {
                 if (table[row, right] == c)
                 {
@@ -202,7 +231,7 @@ namespace Laboratory2
         
         private double getColPoints(char c, int row, int col)
         {
-            int counter = 0;
+            int counter = 1;
 
             int i = 0;
             for (int down = row + 1; down < GRIDSIZE && ++i < 4; down++)
