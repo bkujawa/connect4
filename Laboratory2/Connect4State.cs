@@ -58,7 +58,7 @@ namespace Laboratory2
             this.id = IDMaker();
 
             //ustawienie na ktorym poziomie w drzewie znajduje sie stan.
-            this.depth = parent.depth + 1; // 0.5 (?)
+            this.depth = parent.depth + 1; // 0.5 (?) this.depth = parent.depth + 0.5;
 
             //Bardzo wazne nie ustawiamy na czubek drzewa z ktorego budujemy stan. Tylko na pierwsze pokolenie stanow potomnych
             if (parent.rootMove == null)
@@ -72,6 +72,23 @@ namespace Laboratory2
             //Ustawienie stanu jako potomka rodzica
             parent.Children.Add(this);
         }
+        /*public Connect4State(Connect4State state, string id) : base()
+          {
+            depth = parent.depth + 0.5;
+            if (id == null) //Jesli algorytm nie wybral stanu, wtedy np. stworz nowy stan w pierwszym wolnym miejscu
+            else
+            {
+                for (int i = 0; i < GRIDSIZE; ++i)
+                {
+                    for (int j = 0; j < GRIDSIZE; ++j)
+                    {
+                        table[i,j] = id[i * GRIDSIZE + j];
+                    }
+                }
+            }
+            this.h = ComputeHeuristicGrade();
+          } 
+        */
 
         public override double ComputeHeuristicGrade()
         {
