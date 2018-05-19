@@ -8,7 +8,7 @@ namespace Laboratory2 {
 		public static bool computerFirst; //1 zaczyna komputer; 0 czlowiek
 
 		static void Main(string[] args) {
-			//Losowy start jak skoñczê heurystykê
+			//Losowy start jak skoÃ±czÃª heurystykÃª
 			computerFirst = true; //true jesli komputer zaczyna (pozniej zostanie zmienione)
                                   //Console.SetWindowSize(50,20);//wysokosc i szerokosc konsoli w razie czego zmienic lub usunac
 
@@ -36,7 +36,12 @@ namespace Laboratory2 {
                     Connect4Search search = new Connect4Search(startState, true, 1);
                     search.DoSearch();
 
-
+		    //W tym miejscu powinno sie pobrac stan z searchera o MIN/MAX wartosci double
+		    //String w MovesMiniMaxes to ID nowego stanu, wybranego przez algorytm
+		    //przed wybraniem kvp.key przejsc sie w petli i sprawdzac wartosci kvp.value
+		    //np. konstruktor Connec4State(Connect4State parent, string id)
+		    // = new Connect4State(startState, kvp.key), tworzy nowy stan wybrany przez AI
+		    //
                     Console.Write("Length: " + search.MovesMiniMaxes.Count + '\n');
                     foreach (KeyValuePair<string, double> kvp in search.MovesMiniMaxes)
                     {
